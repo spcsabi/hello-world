@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello World</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+      rel="stylesheet"
+    />
+    <script src="/script.js" type="module" defer></script>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Hello World</h1>
+      <div class="search-bar">
+        <input
+          type="text"
+          class="search-bar__input"
+          id="search-bar"
+          placeholder="Search..."
+        />
+        <div id="dropdown-content" class="dropdown-content"></div>
+      </div>
+      <div class="search-bar">
+        <input
+          type="number"
+          class="search-bar__input"
+          id="filter-by-population"
+          placeholder=0
+        />
+      </div>
+      <div class="search-bar">
+        <input
+          type="number"
+          class="search-bar__input"
+          id="filter-by-area"
+          placeholder=0
+        />
+      </div>
+    </header>
+    <div id="map_container">
+      <img id="map" src="./assets/World_map_nations.svg" alt="map" />
+    </div>
+  </body>
+</html>
