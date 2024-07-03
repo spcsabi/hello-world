@@ -7,6 +7,8 @@ const body = document.querySelector("body");
 const searchBar = document.querySelector("#search-bar");
 const filterByPopulation = document.querySelector("#filter-by-population");
 const filterByArea = document.querySelector("#filter-by-area");
+const sortForPopulation = document.querySelector("#sort-for-population");
+const sortFotArea = document.querySelector("#sort-for-area");
 
 const dropdownContent = document.querySelector("#dropdown-content");
 
@@ -17,31 +19,43 @@ function main() {
     createPointer(country);
     createCountryName(country);
   });
-  showDropdown();
+  
   filterCountriesBySearchBar();
+  filterCountriesByPopulation();
+  
+  hideFiltered();
+  showDropdown();
   onClose();
 }
 
-function createCountryName(country) {
-  createNode(
-    "a",
-    {
-      id: country.cca3,
-      className: "dropdown__element",
-      innerText: country.name.common,
-      countryCapital: country.capital ? country.capital[0] : "",
-      countryContinent: country.region,
-      countryCca3: country.cca3,
-    },
-    dropdownContent
-  );
-  const searchBarCountryName = dropdownContent.querySelector(
-    `#${country.cca3}`
-  );
-  searchBarCountryName.addEventListener("click", () => {
-    showOnMap(country);
-    createCountryDetails(country, body);
-    searchBar.placeholder = country.name.common;
+function hideFiltered() {
+  window.addEventListener("input", () => {
+    const mapPointers = mapContainer.querySelectorAll(".map_pointer_container");
+    mapPointers.forEach((pointer) => {
+      if (
+        pointer.filterByName ||
+        pointer.filterByPopulation ||
+        pointer.filterByArea
+      ) {
+        pointer.style.display = "none";
+      } else {
+        pointer.style.display = "";
+      }
+    });
+
+    const countryNames = dropdownContent.querySelectorAll(".dropdown__element");
+    countryNames.forEach((countryName) => {
+      if (
+        countryName.filterByName ||
+        countryName.filterByPopulation ||
+        countryName.filterByArea
+      ) {
+        console.log("most");
+        countryName.style.display = "none";
+      } else {
+        countryName.style.display = "";
+      }
+    });
   });
 }
 
@@ -56,75 +70,6 @@ function showOnMap(country) {
   mapContainer.querySelectorAll(`.map_pointer_container`).forEach((el) => {
     el.style.display = "";
     el.id !== country.cca3 ? (el.style.display = "none") : {};
-  });
-}
-
-function filterCountriesBySearchBar() {
-  searchBar.addEventListener("input", (input) => {
-    const filter = input.target.value.toUpperCase();
-    const countryNames = dropdownContent.querySelectorAll(".dropdown__element");
-    countryNames.forEach((countryName) => {
-      const txtValue = countryName.textContent || countryName.innerText;
-      const countryCapital = countryName.countryCapital;
-      const countryContinent = countryName.countryContinent;
-      const countryCca3 = countryName.countryCca3;
-
-      if (
-        txtValue.toUpperCase().indexOf(filter) > -1 ||
-        countryCapital.toUpperCase().startsWith(filter) ||
-        countryContinent.toUpperCase().startsWith(filter) ||
-        countryCca3.toUpperCase().startsWith(filter)
-      ) {
-        countryName.style.display = "";
-      } else {
-        countryName.style.display = "none";
-      }
-    });
-    const mapPointers = mapContainer.querySelectorAll(".map_pointer_container");
-    mapPointers.forEach((pointer) => {
-      const countryName = pointer.countryName;
-      const countryCapital = pointer.countryCapital;
-      const countryContinent = pointer.countryContinent;
-      const countryCca3 = pointer.countryCca3;
-
-      if (
-        countryName.toUpperCase().indexOf(filter) > -1 ||
-        countryCapital.toUpperCase().startsWith(filter) ||
-        countryContinent.toUpperCase().startsWith(filter) ||
-        countryCca3.toUpperCase().startsWith(filter)
-      ) {
-        pointer.style.display = "";
-      } else {
-        pointer.style.display = "none";
-      }
-    });
-  });
-}
-
-function filterCountriesByPopulation() {
-  filterByPopulation.addEventListener("input", (input) => {
-    const filter = input.target.value();
-
-    const mapPointers = mapContainer.querySelectorAll(".map_pointer_container");
-    mapPointers.forEach((pointer) => {
-      const countryName = pointer.countryName;
-      const countryCapital = pointer.countryCapital;
-      const countryContinent = pointer.countryContinent;
-
-      // countryCca3: country.cca3,
-      // countryPopulation: country.population,
-      // countryArea:country.area,
-
-      if (
-        countryName.toUpperCase().indexOf(filter) > -1 ||
-        countryCapital.toUpperCase().indexOf(filter) > -1 ||
-        countryContinent.toUpperCase().indexOf(filter) > -1
-      ) {
-        pointer.style.display = "";
-      } else {
-        pointer.style.display = "none";
-      }
-    });
   });
 }
 
@@ -144,7 +89,7 @@ function onClose() {
     }
     if (
       !event.target.matches(".search-bar__input") &&
-      !lastEvent.target.matches(".search-bar__input") &&
+      !lastEvent?.target.matches(".search-bar__input") &&
       !event.target.matches(".search-bar__input") &&
       !event.target.matches(".country_card") &&
       !event.target.matches("path") &&
@@ -167,6 +112,113 @@ function onClose() {
   });
 }
 
+function filterCountriesBySearchBar() {
+  searchBar.addEventListener("input", (input) => {
+    const filter = input.target.value.toLowerCase();
+
+    const countryNames = dropdownContent.querySelectorAll(".dropdown__element");
+    countryNames.forEach((countryName) => {
+      if (
+        countryName.innerText.toLowerCase().indexOf(filter) > -1 ||
+        countryName.countryCapital.toLowerCase().startsWith(filter) ||
+        countryName.countryContinent.toLowerCase().startsWith(filter) ||
+        countryName.countryCca3.toLowerCase().startsWith(filter)
+      ) {
+        countryName.filterByName = false;
+      } else {
+        countryName.filterByName = true;
+      }
+    });
+    const mapPointers = mapContainer.querySelectorAll(".map_pointer_container");
+    mapPointers.forEach((pointer) => {
+      if (
+        pointer.countryName.toLowerCase().indexOf(filter) > -1 ||
+        pointer.countryCapital.toLowerCase().startsWith(filter) ||
+        pointer.countryContinent.toLowerCase().startsWith(filter) ||
+        pointer.countryCca3.toLowerCase().startsWith(filter)
+      ) {
+        pointer.filterByName = false;
+      } else {
+        pointer.filterByName = true;
+      }
+    });
+  });
+}
+
+function filterCountriesByPopulation() {
+  let sortMode = "more";
+  sortForPopulation.addEventListener("input", (option) => {
+    sortMode = option === "more" ? "more" : "less";
+  });
+  filterByPopulation.addEventListener("input", (input) => {
+    const filter = Number(input.target.value);
+
+    const countryNames = dropdownContent.querySelectorAll(".dropdown__element");
+    countryNames.forEach((countryName) => {
+      switch (sortMode) {
+        case "more":
+          if (Number(countryName.countryPopulation) >= filter) {
+            countryName.filterByPopulation = true;
+          } else {
+            countryName.filterByPopulation = false;
+          }
+        case "less":
+          if (Number(countryName.countryPopulation) <= filter) {
+            countryName.filterByPopulation = true;
+          } else {
+            countryName.filterByPopulation = false;
+          }
+      }
+    });
+
+    const mapPointers = mapContainer.querySelectorAll(".map_pointer_container");
+    mapPointers.forEach((pointer) => {
+      switch (sortMode) {
+        case "more":
+          if (Number(pointer.countryPopulation) >= filter) {
+            pointer.filterByPopulation = true;
+          } else {
+            pointer.filterByPopulation = false;
+          }
+        case "less":
+          if (Number(pointer.countryPopulation) <= filter) {
+            pointer.filterByPopulation = true;
+          } else {
+            pointer.filterByPopulation = false;
+          }
+      }
+    });
+  });
+}
+
+function createCountryName(country) {
+  createNode(
+    "a",
+    {
+      id: country.cca3,
+      className: "dropdown__element",
+      innerText: country.name.common,
+      countryCapital: country.capital ? country.capital[0] : "",
+      countryContinent: country.region,
+      countryCca3: country.cca3,
+      countryPopulation: country.population,
+      countryArea: country.area,
+      filterByName: false,
+      filterByPopulation: false,
+      filterByArea: false,
+    },
+    dropdownContent
+  );
+  const searchBarCountryName = dropdownContent.querySelector(
+    `#${country.cca3}`
+  );
+  searchBarCountryName.addEventListener("click", () => {
+    showOnMap(country);
+    createCountryDetails(country, body);
+    searchBar.placeholder = country.name.common;
+  });
+}
+
 function createPointer(country) {
   const geoInfo = country.latlng;
   const lat = (Math.abs(geoInfo[0] - 90) / 180) * 100;
@@ -185,6 +237,9 @@ function createPointer(country) {
       countryPopulation: country.population,
       countryArea: country.area,
       style: position,
+      filterByName: false,
+      filterByPopulation: false,
+      filterByArea: false,
     },
     mapContainer,
     [mapPin()]

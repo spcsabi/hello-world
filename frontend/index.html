@@ -18,6 +18,7 @@
     <header>
       <h1>Hello World</h1>
       <div class="search-bar">
+        <label for="filter-for-population">Countries:</label>
         <input
           type="text"
           class="search-bar__input"
@@ -27,20 +28,33 @@
         <div id="dropdown-content" class="dropdown-content"></div>
       </div>
       <div class="search-bar">
+        <label for="sort-for-population">Population:</label>
+        <select id="sort-for-population" name="filter" size="1">
+          <option value="more">More than</option>
+          <option value="less">Less than</option>
+        </select>
         <input
           type="number"
           class="search-bar__input"
           id="filter-by-population"
-          placeholder=0
+          placeholder="0"
+          step="1000"
         />
       </div>
       <div class="search-bar">
+        <label for="sort-for-area">Area:</label>
+        <select id="sort-for-area" name="filter" size="1">
+          <option value="more">More than</option>
+          <option value="less">Less than</option>
+        </select>
         <input
           type="number"
           class="search-bar__input"
           id="filter-by-area"
-          placeholder=0
+          placeholder="0"
+          step="1000"
         />
+        <span>k</span>
       </div>
     </header>
     <div id="map_container">
