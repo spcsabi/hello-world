@@ -5,12 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hello World</title>
+    <!--
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
       rel="stylesheet"
     />
+    -->
     <script src="/script.js" type="module" defer></script>
     <link rel="stylesheet" href="./style.css" />
   </head>
@@ -18,7 +20,7 @@
     <header>
       <h1>Hello World</h1>
       <div class="search-bar">
-        <label for="filter-for-population">Countries:</label>
+        <label>Countries:</label>
         <input
           type="text"
           class="search-bar__input"
@@ -27,34 +29,74 @@
         />
         <div id="dropdown-content" class="dropdown-content"></div>
       </div>
-      <div class="search-bar">
-        <label for="sort-for-population">Population:</label>
-        <select id="sort-for-population" name="filter" size="1">
-          <option value="more">More than</option>
-          <option value="less">Less than</option>
-        </select>
-        <input
-          type="number"
-          class="search-bar__input"
-          id="filter-by-population"
-          placeholder="0"
-          step="1000"
-        />
+      <div>
+        <label>Population:</label>
+        
+        <div class="range_container">
+          <div class="sliders_control">
+            <input id="population-from-slider" type="range" value="0" min="0" max="1500" />
+            <input id="population-to-slider" type="range" value="1500" min="0" max="1500" />
+          </div>
+          <div class="form_control">
+            <div class="form_control_container">
+              <div class="form_control_container__time">Min</div>
+              <input
+                class="form_control_container__time__input"
+                type="number"
+                id="population-less-than"
+                value="0"
+                min="0"
+                max="1500"
+              />
+            </div>
+            <div class="form_control_container">
+              <div class="form_control_container__time">Max</div>
+              <input
+                class="form_control_container__time__input"
+                type="number"
+                id="population-more-than"
+                value="1500"
+                min="0"
+                max="1500"
+              />
+            </div>
+          </div>
+        </div>
+
       </div>
       <div class="search-bar">
-        <label for="sort-for-area">Area:</label>
-        <select id="sort-for-area" name="filter" size="1">
-          <option value="more">More than</option>
-          <option value="less">Less than</option>
-        </select>
-        <input
-          type="number"
-          class="search-bar__input"
-          id="filter-by-area"
-          placeholder="0"
-          step="1000"
-        />
-        <span>k</span>
+        <label>Area:</label>
+        <div class="range_container">
+          <div class="sliders_control">
+            <input id="area-from-slider" type="range" value="0" min="0" max="18000" />
+            <input id="area-to-slider" type="range" value="18000" min="0" max="18000" />
+          </div>
+          <div class="form_control">
+            <div class="form_control_container">
+              <div class="form_control_container__time">Min</div>
+              <input
+                class="form_control_container__time__input"
+                type="number"
+                id="area-less-than"
+                value="0"
+                min="0"
+                max="18000"
+              />
+            </div>
+            <div class="form_control_container">
+              <div class="form_control_container__time">Max</div>
+              <input
+                class="form_control_container__time__input"
+                type="number"
+                id="area-more-than"
+                value="18000"
+                min="0"
+                max="18000"
+              />
+            </div>
+          </div>
+        </div>
+
       </div>
     </header>
     <div id="map_container">

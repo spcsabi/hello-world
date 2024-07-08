@@ -1,14 +1,27 @@
 import countries from "./data.js";
 import mapPin from "./assets/mapPin.js";
+
+import {
+  fillSlider,
+  setToggleAccessible,
+  controlFromSlider,
+  controlToSlider,
+  controlFromInput,
+  controlToInput,
+} from "./slider.js";
 let countriesFiltered = countries;
 
 const body = document.querySelector("body");
 
 const searchBar = document.querySelector("#search-bar");
-const filterByPopulation = document.querySelector("#filter-by-population");
-const filterByArea = document.querySelector("#filter-by-area");
-const sortForPopulation = document.querySelector("#sort-for-population");
-const sortFotArea = document.querySelector("#sort-for-area");
+const populationFilterLessThan = document.querySelector(
+  "#population-to-slider"
+);
+const populationFilterMoreThan = document.querySelector(
+  "#population-from-slider"
+);
+const areaFilterLessThan = document.querySelector("#area-to-slider");
+const areaFilterMoreThan = document.querySelector("#area-from-slider");
 
 const dropdownContent = document.querySelector("#dropdown-content");
 
@@ -19,43 +32,41 @@ function main() {
     createPointer(country);
     createCountryName(country);
   });
-  
   filterCountriesBySearchBar();
   filterCountriesByPopulation();
-  
-  hideFiltered();
+  filterCountriesByArea();
+  slider();
+
+  searchBar.addEventListener("input", hideFiltered);
+  populationFilterLessThan.addEventListener("input", hideFiltered);
+  populationFilterMoreThan.addEventListener("input", hideFiltered);
+  areaFilterLessThan.addEventListener("input", hideFiltered);
+  areaFilterMoreThan.addEventListener("input", hideFiltered);
+
   showDropdown();
-  onClose();
+ //onClose();
 }
 
 function hideFiltered() {
-  window.addEventListener("input", () => {
-    const mapPointers = mapContainer.querySelectorAll(".map_pointer_container");
-    mapPointers.forEach((pointer) => {
-      if (
-        pointer.filterByName ||
-        pointer.filterByPopulation ||
-        pointer.filterByArea
-      ) {
-        pointer.style.display = "none";
-      } else {
-        pointer.style.display = "";
-      }
-    });
+  const mapPointers = mapContainer.querySelectorAll(".map_pointer_container");
+  const countryNames = dropdownContent.querySelectorAll(".dropdown__element");
+  hideList(mapPointers);
+  hideList(countryNames);
+}
 
-    const countryNames = dropdownContent.querySelectorAll(".dropdown__element");
-    countryNames.forEach((countryName) => {
-      if (
-        countryName.filterByName ||
-        countryName.filterByPopulation ||
-        countryName.filterByArea
-      ) {
-        console.log("most");
-        countryName.style.display = "none";
-      } else {
-        countryName.style.display = "";
-      }
-    });
+function hideList(list) {
+  list.forEach((el) => {
+    if (
+      el.filterByName ||
+      el.filterByLessPopulation ||
+      el.filterByMorePopulation ||
+      el.filterByLessArea ||
+      el.filterByMoreArea
+    ) {
+      el.style.display = "none";
+    } else {
+      el.style.display = "";
+    }
   });
 }
 
@@ -146,49 +157,102 @@ function filterCountriesBySearchBar() {
 }
 
 function filterCountriesByPopulation() {
-  let sortMode = "more";
-  sortForPopulation.addEventListener("input", (option) => {
-    sortMode = option === "more" ? "more" : "less";
-  });
-  filterByPopulation.addEventListener("input", (input) => {
-    const filter = Number(input.target.value);
+  populationFilterLessThan.addEventListener("input", (input) => {
+    console.log("pop-l")
+    const filter = Number(input.target.value) * 1000000;
 
     const countryNames = dropdownContent.querySelectorAll(".dropdown__element");
-    countryNames.forEach((countryName) => {
-      switch (sortMode) {
-        case "more":
-          if (Number(countryName.countryPopulation) >= filter) {
-            countryName.filterByPopulation = true;
-          } else {
-            countryName.filterByPopulation = false;
-          }
-        case "less":
-          if (Number(countryName.countryPopulation) <= filter) {
-            countryName.filterByPopulation = true;
-          } else {
-            countryName.filterByPopulation = false;
-          }
-      }
-    });
-
     const mapPointers = mapContainer.querySelectorAll(".map_pointer_container");
-    mapPointers.forEach((pointer) => {
-      switch (sortMode) {
-        case "more":
-          if (Number(pointer.countryPopulation) >= filter) {
-            pointer.filterByPopulation = true;
-          } else {
-            pointer.filterByPopulation = false;
-          }
-        case "less":
-          if (Number(pointer.countryPopulation) <= filter) {
-            pointer.filterByPopulation = true;
-          } else {
-            pointer.filterByPopulation = false;
-          }
-      }
-    });
+
+    filterList(filter, countryNames, "Population", "Less");
+    filterList(filter, mapPointers, "Population", "Less");
   });
+
+  populationFilterMoreThan.addEventListener("input", (input) => {
+    console.log("pop-m")
+    const filter = Number(input.target.value)* 1000000;
+
+    const countryNames = dropdownContent.querySelectorAll(".dropdown__element");
+    const mapPointers = mapContainer.querySelectorAll(".map_pointer_container");
+
+    filterList(filter, countryNames, "Population", "More");
+    filterList(filter, mapPointers, "Population", "More");
+  });
+}
+
+function filterCountriesByArea() {
+  areaFilterLessThan.addEventListener("input", (input) => {
+    console.log("area-l")
+    const filter = Number(input.target.value)*1000;
+
+    const countryNames = dropdownContent.querySelectorAll(".dropdown__element");
+    const mapPointers = mapContainer.querySelectorAll(".map_pointer_container");
+
+    filterList(filter, countryNames, "Area", "Less");
+    filterList(filter, mapPointers, "Area", "Less");
+  });
+
+  areaFilterMoreThan.addEventListener("input", (input) => {
+    console.log("area-m")
+    const filter = Number(input.target.value)*1000;
+
+    const countryNames = dropdownContent.querySelectorAll(".dropdown__element");
+    const mapPointers = mapContainer.querySelectorAll(".map_pointer_container");
+
+    filterList(filter, countryNames, "Area", "More");
+    filterList(filter, mapPointers, "Area", "More");
+  });
+}
+
+function filterList(filter, list, by, sortMode) {
+  list.forEach((el) => {
+    switch (sortMode) {
+      case "More":
+        Number(el[`country${by}`]) <= filter
+          ? (el[`filterBy${sortMode + by}`] = true)
+          : (el[`filterBy${sortMode + by}`] = false);
+        break;
+      case "Less":
+        Number(el[`country${by}`]) >= filter
+          ? (el[`filterBy${sortMode + by}`] = true)
+          : (el[`filterBy${sortMode + by}`] = false);
+        break;
+      default:
+        break;
+    }
+  });
+}
+
+function slider() {
+  
+  const populationFromSlider = document.querySelector("#population-from-slider");
+  const populationToSlider = document.querySelector("#population-to-slider");
+  const populationFromInput = document.querySelector("#population-less-than");
+  const populationToInput = document.querySelector("#population-more-than");
+  fillSlider(populationFromSlider, populationToSlider, "#C6C6C6", "#25daa5", populationToSlider);
+  setToggleAccessible(populationToSlider, populationToSlider);
+
+  populationFromSlider.oninput = () => controlFromSlider(populationFromSlider, populationToSlider, populationFromInput);
+  populationToSlider.oninput = () => controlToSlider(populationFromSlider, populationToSlider, populationToInput);
+  populationFromInput.oninput = () =>
+    controlFromInput(populationFromSlider, populationFromInput, populationToInput, populationToSlider);
+  populationToInput.oninput = () =>
+    controlToInput(populationToSlider, populationFromInput, populationToInput, populationToSlider);
+
+  const areaFromSlider = document.querySelector("#area-from-slider");
+  const areaToSlider = document.querySelector("#area-to-slider");
+  const areaFromInput = document.querySelector("#area-less-than");
+  const areaToInput = document.querySelector("#area-more-than");
+  fillSlider(areaFromSlider, areaToSlider, "#C6C6C6", "#25daa5", areaToSlider);
+  setToggleAccessible(areaToSlider, areaToSlider);
+
+  areaFromSlider.oninput = () => controlFromSlider(areaFromSlider, areaToSlider, areaFromInput);
+  areaToSlider.oninput = () => controlToSlider(areaFromSlider, areaToSlider, areaToInput);
+  areaFromInput.oninput = () =>
+    controlFromInput(areaFromSlider, areaFromInput, areaToInput, areaToSlider);
+  areaToInput.oninput = () =>
+    controlToInput(areaToSlider, areaFromInput, areaToInput, areaToSlider);
+
 }
 
 function createCountryName(country) {
@@ -204,8 +268,10 @@ function createCountryName(country) {
       countryPopulation: country.population,
       countryArea: country.area,
       filterByName: false,
-      filterByPopulation: false,
-      filterByArea: false,
+      filterByLessPopulation: false,
+      filterByMorePopulation: false,
+      filterByLessArea: false,
+      filterByMoreArea: false,
     },
     dropdownContent
   );
@@ -238,8 +304,10 @@ function createPointer(country) {
       countryArea: country.area,
       style: position,
       filterByName: false,
-      filterByPopulation: false,
-      filterByArea: false,
+      filterByLessPopulation: false,
+      filterByMorePopulation: false,
+      filterByLessArea: false,
+      filterByMoreArea: false,
     },
     mapContainer,
     [mapPin()]
