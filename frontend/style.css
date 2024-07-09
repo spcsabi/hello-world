@@ -50,7 +50,7 @@ body {
   overflow: hidden;
   max-width: 400px;
   padding: 20px;
-  margin : 20px;
+  margin: 10px;
   position: absolute;
   left: 50%;
   z-index: 10;
@@ -98,7 +98,7 @@ body {
 @media (min-width: 600px) {
   .country_card {
     transform: translate(0%);
-    top: 5rem;
+    top: 11rem;
     left: 0%;
     flex-direction: row;
     align-items: flex-start;
@@ -120,21 +120,58 @@ body {
 
 header {
   color: #fff;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
+  padding: 20px 0px 0px 20px;
+  display: grid;
+  grid-template-areas:
+    "a c c c "
+    "b c c c ";
   align-items: center;
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 12px;
-  margin: 10px;
+  margin: 10px 10px 0px 10px;
+}
+
+@media (max-width: 1140px) {
+  header {
+    grid-template-areas:
+      "a b "
+      "c c ";
+    padding: 20px 50px 0px 50px;
+  }
+  .search-bar{
+    align-items:self-end;
+  }
+}
+
+@media (max-width: 600px) {
+  header {
+    padding: 20px 20px 0px 20px;
+  }
+  header h1 {
+    font-size: 1.5rem;
+  }
+}
+@media (min-width: 600px) {
+  header h1 {
+    font-size: 2rem;
+  }
 }
 
 header h1 {
-  font-size: 2rem;
+  grid-area: a;
   margin-bottom: 0px;
+  padding: 0px 0px 10px 0px;
+}
+
+.filters {
+  grid-area: c;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .search-bar {
+  grid-area: b;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -152,19 +189,21 @@ header h1 {
   border-radius: 5px;
   font-size: 1rem;
   width: 100%;
+  width: 200px;
+  margin: 0px 20px 0px 0px;
 }
 
 .dropdown-content {
   display: none;
   position: absolute;
   background-color: #f9f9f9;
-  min-width: 160px;
+  width: 200px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   z-index: 3;
-  max-height: 200px;
+  max-height: 400px;
   overflow-y: auto;
   border-radius: 5px;
-  margin-top: 5px;
+  margin-top: 45px;
 }
 
 .dropdown-content a {
@@ -182,7 +221,6 @@ header h1 {
   display: block;
 }
 
-
 footer {
   width: 100%;
   background-color: rgba(255, 255, 255, 0.489);
@@ -194,9 +232,10 @@ footer {
 }
 
 .range_container {
+  grid-area: "c";
   display: flex;
   flex-direction: column;
-  width: 50vw;
+  width: 75vw;
   margin: 5px auto;
 }
 

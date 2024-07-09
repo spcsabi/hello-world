@@ -20,7 +20,6 @@
     <header>
       <h1>Hello World</h1>
       <div class="search-bar">
-        <label>Countries:</label>
         <input
           type="text"
           class="search-bar__input"
@@ -30,9 +29,7 @@
         <div id="dropdown-content" class="dropdown-content"></div>
       </div>
 
-      <div class="search-bar">
-        <label>Population:</label>
-
+      <div class="filters">
         <div class="range_container">
           <div class="sliders_control">
             <input
@@ -51,6 +48,7 @@
             />
           </div>
           <div class="form_control">
+            <span>Population: </span>
             <div class="form_control_container">
               <div class="form_control_container__time"></div>
               <input
@@ -63,9 +61,10 @@
                 disabled
               />
             </div>
+            <span> - </span>
             <div class="form_control_container">
               <div class="form_control_container__time"></div>
-              <span> - </span>
+              
               <input
                 class="form_control_container__time__input"
                 type="number"
@@ -75,12 +74,11 @@
                 max="1500"
                 disabled
               />
-              <span> million people</span>
 
             </div>
+            <span> million people</span>
           </div>
         </div>
-        <label>Area:</label>
         <div class="range_container">
           <div class="sliders_control">
             <input
@@ -101,6 +99,7 @@
             />
           </div>
           <div class="form_control">
+            <span> Area: </sup></span>
             <div class="form_control_container">
               <div class="form_control_container__time"></div>
               <input
@@ -114,9 +113,9 @@
                 disabled
               />
             </div>
+            <span> - </span>
             <div class="form_control_container">
               <div class="form_control_container__time"></div>
-              <span> - </span>
               <input
                 class="form_control_container__time__input"
                 type="number"
@@ -127,8 +126,9 @@
                 step="0.01"
                 disabled
               />
-              <span> million km<sup>2</sup></span>
             </div>
+            <span> million km<sup>2</sup></span>
+
           </div>
         </div>
       </div>
