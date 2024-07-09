@@ -29,17 +29,30 @@
         />
         <div id="dropdown-content" class="dropdown-content"></div>
       </div>
-      <div>
+
+      <div class="search-bar">
         <label>Population:</label>
-        
+
         <div class="range_container">
           <div class="sliders_control">
-            <input id="population-from-slider" type="range" value="0" min="0" max="1500" />
-            <input id="population-to-slider" type="range" value="1500" min="0" max="1500" />
+            <input
+              id="population-from-slider"
+              type="range"
+              value="0"
+              min="0"
+              max="1500"
+            />
+            <input
+              id="population-to-slider"
+              type="range"
+              value="1500"
+              min="0"
+              max="1500"
+            />
           </div>
           <div class="form_control">
             <div class="form_control_container">
-              <div class="form_control_container__time">Min</div>
+              <div class="form_control_container__time"></div>
               <input
                 class="form_control_container__time__input"
                 type="number"
@@ -47,10 +60,12 @@
                 value="0"
                 min="0"
                 max="1500"
+                disabled
               />
             </div>
             <div class="form_control_container">
-              <div class="form_control_container__time">Max</div>
+              <div class="form_control_container__time"></div>
+              <span> - </span>
               <input
                 class="form_control_container__time__input"
                 type="number"
@@ -58,45 +73,64 @@
                 value="1500"
                 min="0"
                 max="1500"
+                disabled
               />
+              <span> million people</span>
+
             </div>
           </div>
         </div>
-
-      </div>
-      <div class="search-bar">
         <label>Area:</label>
         <div class="range_container">
           <div class="sliders_control">
-            <input id="area-from-slider" type="range" value="0" min="0" max="18000" />
-            <input id="area-to-slider" type="range" value="18000" min="0" max="18000" />
+            <input
+              id="area-from-slider"
+              type="range"
+              value="0.00"
+              min="0.00"
+              max="18.00"
+              step="0.01"
+            />
+            <input
+              id="area-to-slider"
+              type="range"
+              value="18.00"
+              min="0.00"
+              max="18.00"
+              step="0.01"
+            />
           </div>
           <div class="form_control">
             <div class="form_control_container">
-              <div class="form_control_container__time">Min</div>
+              <div class="form_control_container__time"></div>
               <input
                 class="form_control_container__time__input"
                 type="number"
                 id="area-less-than"
-                value="0"
-                min="0"
-                max="18000"
+                value="0.00"
+                min="0.00"
+                max="18.00"
+                step="0.01"
+                disabled
               />
             </div>
             <div class="form_control_container">
-              <div class="form_control_container__time">Max</div>
+              <div class="form_control_container__time"></div>
+              <span> - </span>
               <input
                 class="form_control_container__time__input"
                 type="number"
                 id="area-more-than"
-                value="18000"
-                min="0"
-                max="18000"
+                value="18.00"
+                min="0.00"
+                max="18.00"
+                step="0.01"
+                disabled
               />
+              <span> million km<sup>2</sup></span>
             </div>
           </div>
         </div>
-
       </div>
     </header>
     <div id="map_container">

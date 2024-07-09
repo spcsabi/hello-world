@@ -44,7 +44,7 @@ function main() {
   areaFilterMoreThan.addEventListener("input", hideFiltered);
 
   showDropdown();
- //onClose();
+  onClose();
 }
 
 function hideFiltered() {
@@ -89,7 +89,8 @@ function onClose() {
   window.addEventListener("click", (event) => {
     if (
       !event.target.matches(".search-bar__input") &&
-      !event.target.matches(".map_pointer")
+      !event.target.matches(".map_pointer") &&
+      !event.target.parentNode.matches(".sliders_control")
     ) {
       const dropdowns = document.querySelectorAll(".dropdown-content");
       dropdowns.forEach(function (dropdown) {
@@ -101,12 +102,16 @@ function onClose() {
     if (
       !event.target.matches(".search-bar__input") &&
       !lastEvent?.target.matches(".search-bar__input") &&
-      !event.target.matches(".search-bar__input") &&
       !event.target.matches(".country_card") &&
+      !event.target.parentNode.parentNode.matches(".country_card") &&
+      !event.target.parentNode.matches(".country_details") &&
+      !event.target.parentNode.matches(".flag_container") &&
+      !event.target.parentNode.matches(".sliders_control") &&
       !event.target.matches("path") &&
       !event.target.matches(".map_pointer") &&
       !event.target.matches(".map_pointer_containter")
     ) {
+      console.log(event.target);
       mapContainer.querySelectorAll(`.map_pointer_container`).forEach((el) => {
         el.style.display = "";
       });
@@ -158,7 +163,6 @@ function filterCountriesBySearchBar() {
 
 function filterCountriesByPopulation() {
   populationFilterLessThan.addEventListener("input", (input) => {
-    console.log("pop-l")
     const filter = Number(input.target.value) * 1000000;
 
     const countryNames = dropdownContent.querySelectorAll(".dropdown__element");
@@ -169,8 +173,7 @@ function filterCountriesByPopulation() {
   });
 
   populationFilterMoreThan.addEventListener("input", (input) => {
-    console.log("pop-m")
-    const filter = Number(input.target.value)* 1000000;
+    const filter = Number(input.target.value) * 1000000;
 
     const countryNames = dropdownContent.querySelectorAll(".dropdown__element");
     const mapPointers = mapContainer.querySelectorAll(".map_pointer_container");
@@ -182,8 +185,7 @@ function filterCountriesByPopulation() {
 
 function filterCountriesByArea() {
   areaFilterLessThan.addEventListener("input", (input) => {
-    console.log("area-l")
-    const filter = Number(input.target.value)*1000;
+    const filter = Number(input.target.value) * 1000;
 
     const countryNames = dropdownContent.querySelectorAll(".dropdown__element");
     const mapPointers = mapContainer.querySelectorAll(".map_pointer_container");
@@ -193,8 +195,7 @@ function filterCountriesByArea() {
   });
 
   areaFilterMoreThan.addEventListener("input", (input) => {
-    console.log("area-m")
-    const filter = Number(input.target.value)*1000;
+    const filter = Number(input.target.value) * 1000;
 
     const countryNames = dropdownContent.querySelectorAll(".dropdown__element");
     const mapPointers = mapContainer.querySelectorAll(".map_pointer_container");
@@ -224,20 +225,47 @@ function filterList(filter, list, by, sortMode) {
 }
 
 function slider() {
-  
-  const populationFromSlider = document.querySelector("#population-from-slider");
+  const populationFromSlider = document.querySelector(
+    "#population-from-slider"
+  );
   const populationToSlider = document.querySelector("#population-to-slider");
   const populationFromInput = document.querySelector("#population-less-than");
   const populationToInput = document.querySelector("#population-more-than");
-  fillSlider(populationFromSlider, populationToSlider, "#C6C6C6", "#25daa5", populationToSlider);
+  fillSlider(
+    populationFromSlider,
+    populationToSlider,
+    "#C6C6C6",
+    "#25daa5",
+    populationToSlider
+  );
   setToggleAccessible(populationToSlider, populationToSlider);
 
-  populationFromSlider.oninput = () => controlFromSlider(populationFromSlider, populationToSlider, populationFromInput);
-  populationToSlider.oninput = () => controlToSlider(populationFromSlider, populationToSlider, populationToInput);
+  populationFromSlider.oninput = () =>
+    controlFromSlider(
+      populationFromSlider,
+      populationToSlider,
+      populationFromInput
+    );
+  populationToSlider.oninput = () =>
+    controlToSlider(
+      populationFromSlider,
+      populationToSlider,
+      populationToInput
+    );
   populationFromInput.oninput = () =>
-    controlFromInput(populationFromSlider, populationFromInput, populationToInput, populationToSlider);
+    controlFromInput(
+      populationFromSlider,
+      populationFromInput,
+      populationToInput,
+      populationToSlider
+    );
   populationToInput.oninput = () =>
-    controlToInput(populationToSlider, populationFromInput, populationToInput, populationToSlider);
+    controlToInput(
+      populationToSlider,
+      populationFromInput,
+      populationToInput,
+      populationToSlider
+    );
 
   const areaFromSlider = document.querySelector("#area-from-slider");
   const areaToSlider = document.querySelector("#area-to-slider");
@@ -246,13 +274,14 @@ function slider() {
   fillSlider(areaFromSlider, areaToSlider, "#C6C6C6", "#25daa5", areaToSlider);
   setToggleAccessible(areaToSlider, areaToSlider);
 
-  areaFromSlider.oninput = () => controlFromSlider(areaFromSlider, areaToSlider, areaFromInput);
-  areaToSlider.oninput = () => controlToSlider(areaFromSlider, areaToSlider, areaToInput);
+  areaFromSlider.oninput = () =>
+    controlFromSlider(areaFromSlider, areaToSlider, areaFromInput);
+  areaToSlider.oninput = () =>
+    controlToSlider(areaFromSlider, areaToSlider, areaToInput);
   areaFromInput.oninput = () =>
     controlFromInput(areaFromSlider, areaFromInput, areaToInput, areaToSlider);
   areaToInput.oninput = () =>
     controlToInput(areaToSlider, areaFromInput, areaToInput, areaToSlider);
-
 }
 
 function createCountryName(country) {
@@ -327,6 +356,7 @@ function createCountryDetails(country, parentNode) {
       e.classList = "";
     });
   }
+
   createNode("div", { className: "country_card" }, parentNode, [
     createNode("div", { className: "flag-container" }, "", [
       createNode("img", {
@@ -348,18 +378,13 @@ function createCountryDetails(country, parentNode) {
         : "",
       createNode("p", {
         className: "detail",
-        innerText: "Area: " + country.area + "m²",
+        innerText: "Population: " + formatNumber(Number(country.population)),
       }),
       createNode("p", {
         className: "detail",
-        innerText: "Population: " + country.population,
+        innerText:
+          "Area: " + formatNumber(Number(country.area)/1000) + " km²",
       }),
-      ...country.timezones.map((timezone) =>
-        createNode("p", {
-          className: "detail",
-          innerText: timezone + " ",
-        })
-      ),
     ]),
   ]);
 }
@@ -377,6 +402,14 @@ function createNode(tagName, attributes = {}, parentNode = "", children = []) {
   }
   parentNode.append(el);
   return null;
+}
+
+function formatNumber(number) {
+  return number.toLocaleString("en-US", {
+    maximumFractionDigits: 2,
+    notation: "compact",
+    compactDisplay: "long",
+  });
 }
 
 main();
