@@ -138,8 +138,8 @@ header {
       "c c ";
     padding: 20px 50px 0px 50px;
   }
-  .search-bar{
-    align-items:self-end;
+  .search-bar {
+    align-items: self-end;
   }
 }
 
@@ -150,11 +150,21 @@ header {
   header h1 {
     font-size: 1.5rem;
   }
+  .form_control span {
+    font-size: small;
+  }
+  .form_control p {
+    font-size: small;
+  }
+  input[type="number"] {
+    font-size: small !important;
+  }
 }
 @media (min-width: 600px) {
   header h1 {
     font-size: 2rem;
   }
+
 }
 
 header h1 {
@@ -205,7 +215,6 @@ header h1 {
   border-radius: 5px;
   margin-top: 45px;
   margin-right: 20px;
-
 }
 
 .dropdown-content a {
@@ -251,6 +260,20 @@ footer {
   display: flex;
 }
 
+.form_control span {
+  align-self: center;
+}
+
+.form_control p {
+  align-self: center;
+}
+
+.form_control div {
+  padding: 0 10px;
+  align-self: center;
+
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -285,6 +308,8 @@ input[type="number"] {
   color: white;
   border: none;
   background: none;
+  text-align: center;
+
 }
 
 input[type="number"]::-webkit-inner-spin-button,
